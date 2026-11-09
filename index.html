@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basketball Game Scheduling System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-ball">🏀</div>
+        <div>
+          <h1>LCC-Biñan</h1>
+          <p>Basketball Scheduling</p>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-link active" data-page="dashboard">⌂ <span>Dashboard</span></button>
+        <button class="nav-link" data-page="teams">👥 <span>Teams</span></button>
+        <button class="nav-link" data-page="schedule">🗓 <span>Schedule</span></button>
+        <button class="nav-link" data-page="courts">▣ <span>Courts</span></button>
+        <button class="nav-link" data-page="team-view">🔎 <span>Team View</span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="note-label">PROJECT</span>
+        <strong>Web-Based Basketball Game Scheduling System</strong>
+        <small>Andrei Kelly Artisen</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <div class="topbar-title">
+          <strong>La Consolacion College – Biñan</strong>
+          <span>Basketball Game Scheduling System</span>
+        </div>
+        <div class="admin-pill">
+          <span class="status-dot"></span>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <section class="page active-page" id="page-dashboard">
+        <div class="hero">
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <p>LA CONSOLACION COLLEGE – BIÑAN</p>
+            <h2>BASKETBALL GAME<br><span>SCHEDULING SYSTEM</span></h2>
+            <p class="hero-sub">Organize, manage, and view basketball game schedules efficiently.</p>
+            <div class="hero-actions">
+              <button class="primary-btn" id="heroCreateSchedule">+ Create Schedule</button>
+              <button class="ghost-btn" data-go="teams">Manage Teams</button>
+            </div>
+          </div>
+          <div class="hero-ball">🏀</div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card blue">
+            <div class="stat-icon">👥</div>
+            <div><strong id="statTeams">0</strong><span>Teams</span></div>
+          </article>
+          <article class="stat-card orange">
+            <div class="stat-icon">🗓</div>
+            <div><strong id="statGames">0</strong><span>Scheduled Games</span></div>
+          </article>
+          <article class="stat-card green">
+            <div class="stat-icon">▣</div>
+            <div><strong id="statCourts">0</strong><span>Courts</span></div>
+          </article>
+          <article class="stat-card purple">
+            <div class="stat-icon">🏆</div>
+            <div><strong>1</strong><span>Tournament</span></div>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel schedule-panel">
+            <div class="panel-head">
+              <div>
+                <h3>Upcoming Games</h3>
+                <p>Latest basketball game schedules</p>
+              </div>
+              <button class="text-btn" data-go="schedule">View Full Schedule →</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th><th>Date</th><th>Time</th><th>Court</th><th>Matchup</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardGames"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside class="right-column">
+            <section class="panel calendar-card">
+              <div class="panel-head compact">
+                <h3>Calendar</h3>
+                <span id="calendarLabel"></span>
+              </div>
+              <div class="calendar" id="calendar"></div>
+            </section>
+
+            <section class="panel announcement">
+              <div class="panel-head compact"><h3>Announcements</h3></div>
+              <div class="announcement-box">
+                <span class="bullet"></span>
+                <div>
+                  <strong>Tournament Scheduling</strong>
+                  <p>Use the Schedule page to add games and check court conflicts automatically.</p>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page" id="page-teams">
+        <div class="page-heading">
+          <div>
+            <p>TEAM MANAGEMENT</p>
+            <h2>Basketball Teams</h2>
+            <span>Add and manage participating team information.</span>
+          </div>
+          <button class="primary-btn" id="openTeamModal">+ Add Team</button>
+        </div>
+        <section class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Team Name</th><th>Coach / Contact</th><th>Action</th></tr></thead>
+              <tbody id="teamsTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-schedule">
+        <div class="page-heading">
+          <div>
+            <p>SCHEDULE MANAGEMENT</p>
+            <h2>Game Schedule</h2>
+            <span>Set game dates, playing times, teams, and court assignments.</span>
+          </div>
+          <button class="primary-btn" id="openScheduleModal">+ Add Game</button>
+        </div>
+
+        <div id="scheduleMessage" class="message hidden"></div>
+
+        <section class="panel">
+          <div class="toolbar">
+            <input type="date" id="filterDate">
+            <select id="filterCourt"><option value="">All Courts</option></select>
+            <button class="ghost-btn small" id="clearFilters">Clear Filters</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Date</th><th>Start</th><th>End</th><th>Court</th><th>Matchup</th><th>Action</th></tr>
+              </thead>
+              <tbody id="scheduleTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-courts">
+        <div class="page-heading">
+          <div>
+            <p>COURT MANAGEMENT</p>
+            <h2>Basketball Courts</h2>
+            <span>Courts used when assigning game schedules.</span>
+          </div>
+          <button class="primary-btn" id="openCourtModal">+ Add Court</button>
+        </div>
+        <div class="court-grid" id="courtGrid"></div>
+      </section>
+
+      <section class="page" id="page-team-view">
+        <div class="page-heading">
+          <div>
+            <p>TEAM SCHEDULE VIEW</p>
+            <h2>Find a Team Schedule</h2>
+            <span>Participating teams can view their assigned dates, times, and court locations.</span>
+          </div>
+        </div>
+        <section class="panel">
+          <div class="team-search">
+            <select id="teamViewSelect"><option value="">Select a team</option></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Time</th><th>Opponent</th><th>Court</th></tr></thead>
+              <tbody id="teamViewTable">
+                <tr><td colspan="4" class="empty-row">Select a team to view its schedule.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="teamModal">
+    <div class="modal-card">
+      <button class="close-btn" data-close="teamModal">×</button>
+      <h3>Add Basketball Team</h3>
+      <form id="teamForm">
+        <label>Team Name<input id="teamName" required placeholder="e.g. Tigers"></label>
+        <label>Coach / Contact<input id="teamCoach" placeholder="e.g. Coach Reyes"></label>
+        <button class="primary-btn full" type="submit">Save Team</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="courtModal">
+    <div class="modal-card">
+      <button class="close-btn" data-close="courtModal">×</button>
+      <h3>Add Basketball Court</h3>
+      <form id="courtForm">
+        <label>Court Name<input id="courtName" required placeholder="e.g. Main Court"></label>
+        <label>Location<input id="courtLocation" placeholder="e.g. School Gymnasium"></label>
+        <button class="primary-btn full" type="submit">Save Court</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="scheduleModal">
+    <div class="modal-card wide">
+      <button class="close-btn" data-close="scheduleModal">×</button>
+      <h3>Create Game Schedule</h3>
+      <form id="scheduleForm">
+        <div class="form-grid">
+          <label>Team A<select id="teamA" required></select></label>
+          <label>Team B<select id="teamB" required></select></label>
+          <label>Game Date<input id="gameDate" type="date" required></label>
+          <label>Court<select id="gameCourt" required></select></label>
+          <label>Start Time<input id="startTime" type="time" required></label>
+          <label>End Time<input id="endTime" type="time" required></label>
+        </div>
+        <div id="conflictAlert" class="message error hidden"></div>
+        <button class="primary-btn full" type="submit">Save Game Schedule</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
